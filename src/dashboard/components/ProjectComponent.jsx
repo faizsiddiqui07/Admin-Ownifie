@@ -59,8 +59,6 @@ const ProjectComponent = () => {
   const get_projects = async () => {
     try {
       const { data } = await axios.get(`${base_url}/api/allProjects`);
-      console.log("dataa",data.data);
-      
 
       setAllProjects(data.data);
       setProjects(data.data);
@@ -121,12 +119,7 @@ const ProjectComponent = () => {
       });
       const { data } = await axios.put(
         `${base_url}/api/project/status-update/${projectId}`,
-        { status },
-        {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        }
+        { status }
       );
       setRes({
         id: "",
@@ -147,9 +140,7 @@ const ProjectComponent = () => {
   const delete_project = async (projectId) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
-        await axios.delete(`${base_url}/api/delete/${projectId}`, {
-          headers: { Authorization: `Bearer ${store.token}` },
-        });
+        await axios.delete(`${base_url}/api/delete/${projectId}`);
         toast.success("Project deleted successfully");
         get_projects();
       } catch (error) {
