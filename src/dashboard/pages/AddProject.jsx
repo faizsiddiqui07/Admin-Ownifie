@@ -245,7 +245,7 @@ const AddProject = () => {
           <h3 className="text-xl font-semibold mb-4 text-gray-700">
             Basic Information
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2  gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               { name: "projectName", placeholder: "Project Name" },
               { name: "projectAddress", placeholder: "Project Address" },
@@ -265,75 +265,86 @@ const AddProject = () => {
                 type: "number",
               },
             ].map(({ name, placeholder, type = "text" }) => (
-              <input
-                key={name}
-                name={name}
-                placeholder={placeholder}
-                type={type}
-                className="input-style w-full"
-                onChange={handleOnChange}
-              />
+              <div key={name} className="flex flex-col">
+                <input
+                  name={name}
+                  placeholder={placeholder}
+                  type={type}
+                  className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={handleOnChange}
+                />
+              </div>
             ))}
 
-            <select
-              name="possessionStatus"
-              className="input-style w-full"
-              onChange={handleOnChange}
-            >
-              <option value="">-- Select Possession Status --</option>
-              <option value="Ready to move">Ready to move</option>
-              <option value="Under Construction">Under Construction</option>
-              <option value="Possession Soon">Possession Soon</option>
-              <option value="Launching Soon">Launching Soon</option>
-            </select>
+            <div className="flex flex-col">
+              <select
+                name="possessionStatus"
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handleOnChange}
+              >
+                <option value="">-- Select Possession Status --</option>
+                <option value="Ready to move">Ready to move</option>
+                <option value="Under Construction">Under Construction</option>
+                <option value="Possession Soon">Possession Soon</option>
+                <option value="Launching Soon">Launching Soon</option>
+              </select>
+            </div>
 
-            <select
-              name="interiorStatus"
-              className="input-style w-full"
-              onChange={handleOnChange}
-            >
-              <option value="">-- Select Interior Status --</option>
-              <option value="Semi-Furnished">Semi-Furnished</option>
-              <option value="Fully-Furnished">Fully-Furnished</option>
-              <option value="Unfurnished">Unfurnished</option>
-            </select>
+            <div className="flex flex-col">
+              <select
+                name="interiorStatus"
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handleOnChange}
+              >
+                <option value="">-- Select Interior Status --</option>
+                <option value="Semi-Furnished">Semi-Furnished</option>
+                <option value="Fully-Furnished">Fully-Furnished</option>
+                <option value="Unfurnished">Unfurnished</option>
+              </select>
+            </div>
 
-            <select
-              name="projectStatus"
-              className="input-style w-full"
-              onChange={handleOnChange}
-              value={data.projectStatus}
-            >
-              <option value="">-- Select Project Status --</option>
-              <option value="Newly Launched">Newly Launched</option>
-              <option value="Sold Out">Sold Out</option>
-              <option value="Coming Soon">Coming Soon</option>
-            </select>
+            <div className="flex flex-col">
+              <select
+                name="projectStatus"
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handleOnChange}
+                value={data.projectStatus}
+              >
+                <option value="">-- Select Project Status --</option>
+                <option value="Newly Launched">Newly Launched</option>
+                <option value="Sold Out">Sold Out</option>
+                <option value="Coming Soon">Coming Soon</option>
+              </select>
+            </div>
 
-            <select
-              name="projectType"
-              className="input-style w-full"
-              onChange={handleOnChange}
-              value={data.projectType}
-            >
-              <option value="">-- Select Project Type --</option>
-              <option value="Villas">Villas</option>
-              <option value="Studio Apartments">Studio Apartments</option>
-              <option value="Farm Lands">Farm Lands</option>
-              <option value="Farm Houses">Farm Houses</option>
-            </select>
+            <div className="flex flex-col">
+              <select
+                name="projectType"
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handleOnChange}
+                value={data.projectType}
+              >
+                <option value="">-- Select Project Type --</option>
+                <option value="Villas">Villas</option>
+                <option value="Studio Apartments">Studio Apartments</option>
+                <option value="Farm Lands">Farm Lands</option>
+                <option value="Farm Houses">Farm Houses</option>
+              </select>
+            </div>
 
-            <input
-              name="functionality"
-              placeholder="Functionality (comma separated)"
-              className="input-style w-full col-span-full sm:col-span-1"
-              onChange={(e) =>
-                setData((prev) => ({
-                  ...prev,
-                  functionality: e.target.value.split(","),
-                }))
-              }
-            />
+            <div className="flex flex-col sm:col-span-2">
+              <input
+                name="functionality"
+                placeholder="Functionality (comma separated)"
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) =>
+                  setData((prev) => ({
+                    ...prev,
+                    functionality: e.target.value.split(","),
+                  }))
+                }
+              />
+            </div>
 
             {/* Amenities Input with Suggestions */}
             <div className="col-span-full">
@@ -341,7 +352,7 @@ const AddProject = () => {
                 <input
                   name="amenities"
                   placeholder="Select or type amenities"
-                  className="input-style w-full"
+                  className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   value={amenityInput}
                   onFocus={() => setShowAmenitySuggestions(true)}
                   onClick={() => setShowAmenitySuggestions(true)}
@@ -362,7 +373,7 @@ const AddProject = () => {
                   }}
                 />
                 {showAmenitySuggestions && (
-                  <div className="absolute z-10 bg-white border rounded shadow-md w-full mt-1 max-h-40 overflow-y-auto">
+                  <div className="absolute z-10 bg-white border border-gray-200 rounded-lg shadow-md w-full mt-1 max-h-40 overflow-y-auto">
                     {commonAmenities
                       .filter((item) =>
                         item.toLowerCase().includes(amenityInput.toLowerCase())
@@ -371,7 +382,7 @@ const AddProject = () => {
                         <div
                           key={amenity}
                           onClick={() => handleAddAmenity(amenity)}
-                          className="px-4 py-2 hover:bg-blue-100 cursor-pointer text-sm"
+                          className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
                         >
                           {amenity}
                         </div>
@@ -408,7 +419,7 @@ const AddProject = () => {
                 rows={5}
                 value={data.projectOverview}
                 onChange={handleOnChange}
-                className="input-style w-full"
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               ></textarea>
             </div>
           </div>
@@ -419,67 +430,69 @@ const AddProject = () => {
           <h3 className="text-xl font-semibold mb-4 text-gray-700">
             Ownership Plan Installments
           </h3>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.keys(data.ownershipPlan).map((key) => {
               const placeholder = key
                 .replace(/([A-Z])/g, " $1")
                 .replace(/^./, (str) => str.toUpperCase());
 
               return (
-                <input
-                  key={key}
-                  type="number"
-                  placeholder={placeholder}
-                  value={data.ownershipPlan[key]}
-                  onChange={(e) =>
-                    setData((prev) => ({
-                      ...prev,
-                      ownershipPlan: {
-                        ...prev.ownershipPlan,
-                        [key]: e.target.value,
-                      },
-                    }))
-                  }
-                  className="input-style"
-                />
+                <div key={key} className="flex flex-col">
+                  <input
+                    type="number"
+                    placeholder={placeholder}
+                    value={data.ownershipPlan[key]}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        ownershipPlan: {
+                          ...prev.ownershipPlan,
+                          [key]: e.target.value,
+                        },
+                      }))
+                    }
+                    className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               );
             })}
           </div>
         </div>
 
         {/* Unit Breakdown */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {["wholeUnit", "singleUnit"].map((unitKey) => (
             <div key={unitKey} className="bg-white p-6 rounded-2xl shadow-md">
-              <h3 className="text-lg font-semibold mb-2 text-gray-700 capitalize">
+              <h3 className="text-lg font-semibold mb-4 text-gray-700 capitalize">
                 {unitKey.replace("Unit", " Unit Breakdown")}
               </h3>
               <div className="grid gap-3">
                 {Object.keys(data.unitBreakdown[unitKey]).map((field) => {
                   const placeholder = field
-                    .replace(/([A-Z])/g, " $1") // add space before capital letters
-                    .replace(/^./, (str) => str.toUpperCase()); // capitalize first letter
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase());
 
                   return (
-                    <input
-                      key={field}
-                      placeholder={placeholder}
-                      type="number"
-                      value={data.unitBreakdown[unitKey][field]}
-                      onChange={(e) =>
-                        setData((prev) => ({
-                          ...prev,
-                          unitBreakdown: {
-                            ...prev.unitBreakdown,
-                            [unitKey]: {
-                              ...prev.unitBreakdown[unitKey],
-                              [field]: e.target.value,
+                    <div key={field} className="flex flex-col">
+                      <input
+                        placeholder={placeholder}
+                        type="number"
+                        value={data.unitBreakdown[unitKey][field]}
+                        onChange={(e) =>
+                          setData((prev) => ({
+                            ...prev,
+                            unitBreakdown: {
+                              ...prev.unitBreakdown,
+                              [unitKey]: {
+                                ...prev.unitBreakdown[unitKey],
+                                [field]: e.target.value,
+                              },
                             },
-                          },
-                        }))
-                      }
-                      className="input-style"
-                    />
+                          }))
+                        }
+                        className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
                   );
                 })}
               </div>
@@ -493,55 +506,90 @@ const AddProject = () => {
             Farm House & Farm Lands Costing 
           </h3>
           {["bsp", "idc", "servicesAndAmenities"].map((key) => (
-            <div key={key} className="grid sm:grid-cols-3 gap-4 mb-4">
+            <div key={key} className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div className="flex flex-col">
+                <input
+                  type="number"
+                  placeholder={`${key.toUpperCase()} Square Feet`}
+                  value={farmHouse[key].squareFeet}
+                  onChange={(e) =>
+                    setFarmHouse((prev) => ({
+                      ...prev,
+                      [key]: { ...prev[key], squareFeet: e.target.value },
+                    }))
+                  }
+                  className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="flex flex-col">
+                <input
+                  type="number"
+                  placeholder={`${key.toUpperCase()} Rate`}
+                  value={farmHouse[key].rate}
+                  onChange={(e) =>
+                    setFarmHouse((prev) => ({
+                      ...prev,
+                      [key]: { ...prev[key], rate: e.target.value },
+                    }))
+                  }
+                  className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="flex flex-col">
+                <input
+                  type="number"
+                  placeholder="Total"
+                  value={farmHouse[key].total}
+                  disabled
+                  className="input-style w-full p-3 bg-gray-100 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div> 
+          ))}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <div className="flex flex-col">
+              <select
+                value={farmHouse.farmHouseModule}
+                onChange={(e) => setFarmHouse(prev => ({...prev, farmHouseModule: e.target.value}))}
+                className="input-style w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select Farm House Module</option>
+                <option value="Module1">Module 1 (₹500,000)</option>
+                <option value="Module2">Module 2 (₹800,000)</option>
+              </select>
+            </div>
+            <div className="flex flex-col">
               <input
                 type="number"
-                placeholder={`${key.toUpperCase()} Square Feet`}
-                value={farmHouse[key].squareFeet}
-                onChange={(e) =>
-                  setFarmHouse((prev) => ({
-                    ...prev,
-                    [key]: { ...prev[key], squareFeet: e.target.value },
-                  }))
-                }
-                className="input-style"
-              />
-              <input
-                type="number"
-                placeholder={`${key.toUpperCase()} Rate`}
-                value={farmHouse[key].rate}
-                onChange={(e) =>
-                  setFarmHouse((prev) => ({
-                    ...prev,
-                    [key]: { ...prev[key], rate: e.target.value },
-                  }))
-                }
-                className="input-style"
-              />
-              <input
-                type="number"
-                placeholder="Total"
-                value={farmHouse[key].total}
+                placeholder="Grand Total"
+                value={farmHouse.grandTotal}
                 disabled
-                className="input-style bg-gray-100"
+                className="input-style w-full p-3 bg-gray-100 border border-gray-300 rounded-lg font-semibold"
               />
             </div>
-          ))}
+          </div>
         </div>
 
         {/* Image Upload */}
         <div className="bg-white p-6 rounded-2xl shadow-md">
-          <h3 className="text-xl font-semibold mb-3 text-gray-700">
+          <h3 className="text-xl font-semibold mb-4 text-gray-700">
             Upload Project Images
           </h3>
-          <input type="file" onChange={handleImageUpload} />
+          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <FaCloudUploadAlt className="w-8 h-8 mb-3 text-gray-500" />
+              <p className="mb-2 text-sm text-gray-500">Click to upload or drag and drop</p>
+            </div>
+            <input type="file" className="hidden" onChange={handleImageUpload} />
+          </label>
           <div className="flex flex-wrap gap-3 mt-4">
             {data.projectImages.map((img, i) => (
               <div key={i} className="relative group">
                 <img
                   src={img.url}
                   alt="project"
-                  className="w-24 h-24 object-cover border rounded shadow-md cursor-pointer"
+                  className="w-24 h-24 object-cover border rounded-lg shadow-sm cursor-pointer transition-transform duration-200 hover:scale-105"
                   onClick={() => {
                     setOpenFullScreenImage(true);
                     setFullScreenImage(img.url);
@@ -549,7 +597,7 @@ const AddProject = () => {
                 />
                 <button
                   type="button"
-                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600 transition-colors"
                   onClick={() => handleImageDelete(i, img.public_id)}
                 >
                   <MdDelete size={16} />
@@ -568,8 +616,10 @@ const AddProject = () => {
             ref={editor}
             value={data.description}
             config={{
-              height: 300, // height in pixels (e.g., 400px)
+              height: 300,
               readonly: false,
+              toolbarAdaptive: false,
+              buttons: "bold,italic,underline,ul,ol,align,link,source",
             }}
             onBlur={(content) =>
               setData((prev) => ({ ...prev, description: content }))
@@ -579,10 +629,10 @@ const AddProject = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="text-right">
+        <div className="flex justify-center md:justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition w-full sm:w-auto"
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full md:w-auto font-medium shadow-md hover:shadow-lg"
           >
             Submit Project
           </button>
@@ -596,6 +646,13 @@ const AddProject = () => {
           onClose={() => setOpenFullScreenImage(false)}
         />
       )}
+      
+      <style jsx>{`
+        .input-style:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+      `}</style>
     </div>
   );
 };

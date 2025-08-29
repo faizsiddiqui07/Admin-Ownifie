@@ -200,7 +200,7 @@ const ProjectComponent = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden mt-2">
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 border-b border-gray-100">
         <div>
@@ -212,7 +212,7 @@ const ProjectComponent = () => {
 
         <Link
           to="/dashboard/project/add"
-          className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl text-white font-medium hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl text-white font-medium hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
         >
           <FaPlus className="text-sm" />
           <span>Add New Project</span>
@@ -243,7 +243,7 @@ const ProjectComponent = () => {
               <select
                 onChange={type_filter}
                 value={statusFilter}
-                className="pl-10 pr-8 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none appearance-none bg-white transition-all"
+                className="pl-10 pr-8 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none appearance-none bg-white transition-all"
               >
                 <option value="">All Status</option>
                 <option value="pending">Pending</option>
@@ -259,7 +259,7 @@ const ProjectComponent = () => {
                   sortProjects(e.target.value);
                 }}
                 value={sortBy}
-                className="px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none appearance-none bg-white transition-all"
+                className="px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none appearance-none bg-white transition-all"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -284,7 +284,7 @@ const ProjectComponent = () => {
       </div>
 
       {/* Projects Grid View */}
-      <div className="p-6">
+      <div className="p-3 sm:p-6">
         {projects.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-300 text-6xl mb-4">🏗️</div>
@@ -307,7 +307,7 @@ const ProjectComponent = () => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2  2xl:grid-cols-3 gap-6">
             {projects
               .slice((page - 1) * parPage, page * parPage)
               .map((project) => (
@@ -367,7 +367,7 @@ const ProjectComponent = () => {
 
                     <div className="flex gap-2 pt-4 border-t border-gray-100">
                       <Link
-                        to={`http://localhost:3000/project/${project.slug}`}
+                        to={`https://ownifie.com/projectdetail/${project.slug}`}
                         target="_blank"
                         className="flex-1 text-center bg-green-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
                         title="View Project"

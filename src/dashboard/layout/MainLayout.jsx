@@ -28,7 +28,7 @@ const MainLayout = () => {
         </div>
 
         {/* Content */}
-        <main className="pt-16 px-4 lg:px-6 pb-6 min-h-screen">
+        <main className="pt-12 px-4 lg:px-6 pb-6 min-h-screen">
           <div className="max-w-[1200px] mx-auto mt-6">
             <Outlet />
           </div>
