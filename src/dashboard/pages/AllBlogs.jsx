@@ -125,7 +125,7 @@ const AllBlogs = () => {
         </div>
         <button
           onClick={() => navigate("/dashboard/blog/add")}
-          className="mt-4 md:mt-0 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
+          className="mt-4 md:mt-0 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all font-medium shadow-md"
         >
           + Add New Blog
         </button>

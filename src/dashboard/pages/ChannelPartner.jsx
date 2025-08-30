@@ -12,7 +12,7 @@ import {
   FaMapMarkerAlt,
   FaTag,
   FaCalendar,
-  FaFilter
+  FaFilter,
 } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import toast from "react-hot-toast";
@@ -272,7 +272,10 @@ const ChannelPartner = () => {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 font-medium">
-                          <img src={item?.documents?.profileImage.url} alt={item?.fullname} />
+                          <img
+                            src={item?.documents?.profileImage.url}
+                            alt={item?.fullname}
+                          />
                         </div>
                         <div className="font-medium text-gray-900">
                           {item?.fullname}
@@ -345,7 +348,10 @@ const ChannelPartner = () => {
               <div key={item._id} className="bg-white p-4 rounded-xl shadow-sm">
                 <div className="flex items-center mb-3">
                   <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-                   <img src={item?.documents?.profileImage.url} alt={item?.fullname} />
+                    <img
+                      src={item?.documents?.profileImage.url}
+                      alt={item?.fullname}
+                    />
                   </div>
                   <div className="ml-3">
                     <h3 className="font-medium text-gray-900">
@@ -507,23 +513,22 @@ const ChannelPartner = () => {
                         selectedPartner?.documents?.[doc.key]?.url && (
                           <div
                             key={index}
-                            className="border rounded-lg p-4 transition-all hover:shadow-md"
+                            className="border rounded-lg p-4 transition-all hover:shadow-md bg-white"
                           >
                             <p className="text-sm font-medium text-gray-600 mb-2">
                               {doc.label}
                             </p>
-                            <div className="relative group">
+                            <div className="w-full h-48 flex items-center justify-center overflow-hidden rounded-lg border">
                               <img
                                 src={selectedPartner.documents[doc.key].url}
                                 alt={doc.label}
-                                className="w-full h-48 object-contain rounded border cursor-pointer"
+                                className="max-h-full object-contain cursor-pointer"
                                 onClick={() =>
                                   downloadImage(
                                     selectedPartner.documents[doc.key].url,
                                     `${doc.label}-${selectedPartner.fullname}.jpg`
                                   )
                                 }
-                                style={{ cursor: "pointer" }}
                               />
                             </div>
                           </div>
