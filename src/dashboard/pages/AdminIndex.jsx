@@ -448,7 +448,7 @@ const AdminIndex = () => {
             Manage your projects and blogs from one place
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 xs:gap-2">
           <button
             onClick={fetchData}
             className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
@@ -467,23 +467,23 @@ const AdminIndex = () => {
           </button>
           <Link
             to="/dashboard/project/add"
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-2 sm:px-4 rounded-lg transition-colors"
           >
             <FaPlus className="text-sm" />
-            <span>New Project</span>
+            <span>Project</span>
           </Link>
           <Link
             to="/dashboard/blog/add"
-            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-2 sm:px-4 rounded-lg transition-colors"
           >
             <FaPlus className="text-sm" />
-            <span>New Blog</span>
+            <span>Blog</span>
           </Link>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
         <SummaryCard
           title="Total Projects"
           count={stats.totalProjects}
@@ -743,87 +743,52 @@ const AdminIndex = () => {
 
         {/* Pagination */}
         {sortedData.length > 0 && (
-          <div className="p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-700">Show</span>
-              <select
-                className="border border-gray-300 rounded-md px-2 py-1"
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-              </select>
-              <span className="text-sm text-gray-700">entries</span>
-            </div>
+  <div className="p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+    
+    {/* Entries per page */}
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-gray-700">Show</span>
+      <select
+        className="border border-gray-300 rounded-md px-2 py-1"
+        value={itemsPerPage}
+        onChange={handleItemsPerPageChange}
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+      <span className="text-sm text-gray-700">entries</span>
+    </div>
 
-            <div className="text-sm text-gray-700">
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-              {Math.min(currentPage * itemsPerPage, sortedData.length)} of{" "}
-              {sortedData.length} entries
-            </div>
+    {/* Showing info */}
+    <div className="text-sm text-gray-700">
+      Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+      {Math.min(currentPage * itemsPerPage, sortedData.length)} of{" "}
+      {sortedData.length} entries
+    </div>
 
-            <div className="flex gap-1">
-              <button
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                First
-              </button>
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
+    {/* Pagination simple */}
+    <div className="flex gap-2">
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Previous
+      </button>
+      <span className="px-3 py-1">{currentPage} / {totalPages}</span>
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+)}
 
-              {/* Page numbers */}
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = currentPage - 2 + i;
-                }
-
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-1 rounded border ${
-                      currentPage === pageNum ? "bg-blue-600 text-white" : ""
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-              <button
-                onClick={() => handlePageChange(totalPages)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Last
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -1337,7 +1302,7 @@ const BlogCards = ({
 // Enhanced SummaryCard component
 const SummaryCard = ({ title, count, icon, bg, onClick }) => (
   <div
-    className={`${bg} rounded-xl p-5 text-white shadow-sm transition-all hover:shadow-md ${
+    className={`${bg} rounded-xl p-3 xs:p-4 sm:p-5 text-white shadow-sm transition-all hover:shadow-md ${
       onClick ? "cursor-pointer hover:scale-105" : ""
     }`}
     onClick={onClick}
@@ -1345,9 +1310,9 @@ const SummaryCard = ({ title, count, icon, bg, onClick }) => (
     <div className="flex items-center justify-between">
       <div>
         <p className="text-2xl font-bold">{count}</p>
-        <p className="text-sm opacity-90 mt-1">{title}</p>
+        <p className="text-[12px] xxs:text-sm opacity-90 mt-1">{title}</p>
       </div>
-      <div className="text-2xl opacity-80">{icon}</div>
+      <div className="text-xl sm:text-2xl opacity-80">{icon}</div>
     </div>
   </div>
 );
