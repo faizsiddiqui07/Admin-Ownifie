@@ -13,7 +13,13 @@
     "@ckeditor/ckeditor5-build-classic": "^44.3.0",
     "@ckeditor/ckeditor5-react": "^9.5.0",
     "@headlessui/react": "^2.2.7",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tooltip": "^1.2.8",
     "axios": "^1.7.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "copy-text-to-clipboard": "^3.2.0",
     "html-react-parser": "^5.2.6",
     "html-to-text": "^9.0.5",
@@ -33,9 +39,12 @@
     "react-multi-carousel": "^2.8.5",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.1",
-    "react-spinners-components": "^2.0.4"
+    "react-spinners-components": "^2.0.4",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",

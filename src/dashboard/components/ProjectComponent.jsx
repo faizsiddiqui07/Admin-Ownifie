@@ -37,6 +37,7 @@ const ProjectComponent = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
+  const [isLoading, setIsLoading] = useState(true); // New loading state
 
   // Handle window resize for responsive behavior
   useEffect(() => {
@@ -58,12 +59,16 @@ const ProjectComponent = () => {
 
   const get_projects = async () => {
     try {
+      setIsLoading(true); // Start loading
       const { data } = await axios.get(`${base_url}/api/allProjects`);
 
       setAllProjects(data.data);
       setProjects(data.data);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to fetch projects");
+    } finally {
+      setIsLoading(false); // Stop loading regardless of success or failure
     }
   };
 
@@ -270,235 +275,238 @@ const ProjectComponent = () => {
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="px-6 py-4 bg-white border-b border-gray-200">
-        <p className="text-sm text-gray-600">
-          Showing <span className="font-semibold">{projects.length}</span> projects
-          {searchQuery && (
-            <span> for "<span className="font-semibold">{searchQuery}</span>"</span>
-          )}
-          {statusFilter && (
-            <span> with status <span className="font-semibold">{statusFilter}</span></span>
-          )}
-        </p>
-      </div>
+      {/* Results Count - Only show when not loading */}
+      {!isLoading && (
+        <div className="px-6 py-4 bg-white border-b border-gray-200">
+          <p className="text-sm text-gray-600">
+            Showing <span className="font-semibold">{projects.length}</span> projects
+            {searchQuery && (
+              <span> for "<span className="font-semibold">{searchQuery}</span>"</span>
+            )}
+            {statusFilter && (
+              <span> with status <span className="font-semibold">{statusFilter}</span></span>
+            )}
+          </p>
+        </div>
+      )}
 
-      {/* Projects Grid View */}
-      <div className="p-3 sm:p-6">
-        {projects.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-300 text-6xl mb-4">🏗️</div>
-            <h3 className="text-lg font-medium text-gray-600">
-              No projects found
-            </h3>
-            <p className="text-gray-500 mt-1">
-              {searchQuery || statusFilter
-                ? "Try adjusting your search or filter criteria"
-                : "Get started by adding your first project"}
-            </p>
-            {!(searchQuery || statusFilter) && (
-              <Link
-                to="/dashboard/project/add"
-                className="inline-flex items-center gap-2 px-6 py-3 mt-4 bg-purple-600 rounded-xl text-white font-medium hover:bg-purple-700 transition-colors"
-              >
-                <FaPlus />
-                Add New Project
-              </Link>
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="p-12 flex flex-col items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600 mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading projects...</p>
+          <p className="text-gray-500 text-sm mt-1">Please wait while we fetch your projects</p>
+        </div>
+      ) : (
+        <>
+          {/* Projects Grid View */}
+          <div className="p-3 sm:p-6">
+            {projects.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-gray-300 text-6xl mb-4">🏗️</div>
+                <h3 className="text-lg font-medium text-gray-600">
+                  No projects found
+                </h3>
+                <p className="text-gray-500 mt-1">
+                  {searchQuery || statusFilter
+                    ? "Try adjusting your search or filter criteria"
+                    : "Get started by adding your first project"}
+                </p>
+                {!(searchQuery || statusFilter) && (
+                  <Link
+                    to="/dashboard/project/add"
+                    className="inline-flex items-center gap-2 px-6 py-3 mt-4 bg-purple-600 rounded-xl text-white font-medium hover:bg-purple-700 transition-colors"
+                  >
+                    <FaPlus />
+                    Add New Project
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2  2xl:grid-cols-3 gap-6">
+                {projects
+                  .slice((page - 1) * parPage, page * parPage)
+                  .map((project) => (
+                    <div
+                      key={project._id}
+                      className="bg-white rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                    >
+                      <div className="relative">
+                        {project.projectImages?.[0] ? (
+                          <img
+                            src={project.projectImages[0].url}
+                            alt={project.projectName}
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                            <span className="text-gray-300 text-5xl">🏗️</span>
+                          </div>
+                        )}
+                        
+                        <div className="absolute top-3 right-3">
+                          <StatusBadge
+                            status={project.status}
+                            projectId={project._id}
+                          />
+                        </div>
+                        
+                        <div className="absolute top-3 left-3">
+                          <span className="px-3 py-1 bg-black bg-opacity-70 text-white text-xs rounded-full">
+                            {project.projectType || "Project"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-5">
+                        <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1">
+                          {project.projectName}
+                        </h3>
+                        
+                        <div className="flex items-center text-gray-500 text-sm mb-3">
+                          <FaMapMarkerAlt className="mr-2 flex-shrink-0" />
+                          <span className="line-clamp-1">{project.projectAddress}</span>
+                        </div>
+                        
+                        <div className="flex items-center text-gray-500 text-sm mb-4">
+                          <FaCalendarAlt className="mr-2 flex-shrink-0" />
+                          <span>{project.date}</span>
+                        </div>
+
+                        <div className="flex gap-2 pt-4 border-t border-gray-100">
+                          <Link
+                            to={`https://ownifie.com/projectdetail/${project.slug}`}
+                            target="_blank"
+                            className="flex-1 text-center bg-green-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+                            title="View Project"
+                          >
+                            <FaEye className="text-xs" />
+                            <span>View</span>
+                          </Link>
+                          <Link
+                            to={`/dashboard/project/edit/${project._id}`}
+                            className="flex-1 text-center bg-yellow-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2"
+                            title="Edit Project"
+                          >
+                            <FaEdit className="text-xs" />
+                            <span>Edit</span>
+                          </Link>
+                          <button
+                            onClick={() => delete_project(project._id)}
+                            className="flex-1 text-center bg-red-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
+                            title="Delete Project"
+                          >
+                            <FaTrash className="text-xs" />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             )}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2  2xl:grid-cols-3 gap-6">
-            {projects
-              .slice((page - 1) * parPage, page * parPage)
-              .map((project) => (
-                <div
-                  key={project._id}
-                  className="bg-white rounded-2xl border border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden group"
-                >
-                  <div className="relative">
-                    {project.projectImages?.[0] ? (
-                      <img
-                        src={project.projectImages[0].url}
-                        alt={project.projectName}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <span className="text-gray-300 text-5xl">🏗️</span>
-                      </div>
-                    )}
-                    
-                    <div className="absolute top-3 right-3">
-                      <StatusBadge
-                        status={project.status}
-                        projectId={project._id}
-                      />
-                    </div>
-                    
-                    <div className="absolute top-3 left-3">
-                      <span className="px-3 py-1 bg-black bg-opacity-70 text-white text-xs rounded-full">
-                        {project.projectType || "Project"}
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1">
-                      {project.projectName}
-                    </h3>
-                    
-                    <div className="flex items-center text-gray-500 text-sm mb-3">
-                      <FaMapMarkerAlt className="mr-2 flex-shrink-0" />
-                      <span className="line-clamp-1">{project.projectAddress}</span>
-                    </div>
-                    
-                    <div className="flex items-center text-gray-500 text-sm mb-4">
-                      <FaCalendarAlt className="mr-2 flex-shrink-0" />
-                      <span>{project.date}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center mb-4">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                        <span className="text-xs text-gray-500">Active</span>
-                      </div>
-                      <span className="text-xs text-gray-500">ID: {project._id.slice(-6)}</span>
-                    </div>
-
-                    <div className="flex gap-2 pt-4 border-t border-gray-100">
-                      <Link
-                        to={`https://ownifie.com/projectdetail/${project.slug}`}
-                        target="_blank"
-                        className="flex-1 text-center bg-green-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-                        title="View Project"
-                      >
-                        <FaEye className="text-xs" />
-                        <span>View</span>
-                      </Link>
-                      <Link
-                        to={`/dashboard/${
-                          project.isFurniture ? "furniture" : "project"
-                        }/edit/${project._id}`}
-                        className="flex-1 text-center bg-yellow-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2"
-                        title="Edit Project"
-                      >
-                        <FaEdit className="text-xs" />
-                        <span>Edit</span>
-                      </Link>
-                      <button
-                        onClick={() => delete_project(project._id)}
-                        className="flex-1 text-center bg-red-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
-                        title="Delete Project"
-                      >
-                        <FaTrash className="text-xs" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
-
-      {/* Pagination */}
-      {projects.length > 0 && (
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">
-                Projects per page:
-              </span>
-              <select
-                value={parPage}
-                onChange={(e) => {
-                  setParPage(parseInt(e.target.value));
-                  setPage(1);
-                }}
-                className="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
-              >
-                <option value="6">6</option>
-                <option value="12">12</option>
-                <option value="24">24</option>
-                <option value="48">48</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col xs:flex-row items-center gap-4">
-              <span className="text-sm text-gray-600">
-                Showing {(page - 1) * parPage + 1} to{" "}
-                {Math.min(page * parPage, projects.length)} of {projects.length}
-              </span>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => page > 1 && setPage(page - 1)}
-                  disabled={page === 1}
-                  className={`p-2 rounded-lg ${
-                    page === 1
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <FaChevronLeft />
-                </button>
-
-                <div className="flex gap-1">
-                  {Array.from({ length: Math.min(5, pages) }, (_, i) => {
-                    let pageNum;
-                    if (pages <= 5) {
-                      pageNum = i + 1;
-                    } else if (page <= 3) {
-                      pageNum = i + 1;
-                    } else if (page >= pages - 2) {
-                      pageNum = pages - 4 + i;
-                    } else {
-                      pageNum = page - 2 + i;
-                    }
-
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => setPage(pageNum)}
-                        className={`w-10 h-10 rounded-lg text-sm ${
-                          page === pageNum
-                            ? "bg-purple-600 text-white"
-                            : "text-gray-600 hover:bg-gray-200"
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-
-                  {pages > 5 && page < pages - 2 && (
-                    <>
-                      <span className="px-2 flex items-center">...</span>
-                      <button
-                        onClick={() => setPage(pages)}
-                        className="w-10 h-10 rounded-lg text-sm text-gray-600 hover:bg-gray-200"
-                      >
-                        {pages}
-                      </button>
-                    </>
-                  )}
+          {/* Pagination */}
+          {projects.length > 0 && (
+            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600">
+                    Projects per page:
+                  </span>
+                  <select
+                    value={parPage}
+                    onChange={(e) => {
+                      setParPage(parseInt(e.target.value));
+                      setPage(1);
+                    }}
+                    className="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                  >
+                    <option value="6">6</option>
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                    <option value="48">48</option>
+                  </select>
                 </div>
 
-                <button
-                  onClick={() => page < pages && setPage(page + 1)}
-                  disabled={page === pages}
-                  className={`p-2 rounded-lg ${
-                    page === pages
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <FaChevronRight />
-                </button>
+                <div className="flex flex-col xs:flex-row items-center gap-4">
+                  <span className="text-sm text-gray-600">
+                    Showing {(page - 1) * parPage + 1} to{" "}
+                    {Math.min(page * parPage, projects.length)} of {projects.length}
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => page > 1 && setPage(page - 1)}
+                      disabled={page === 1}
+                      className={`p-2 rounded-lg ${
+                        page === 1
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      <FaChevronLeft />
+                    </button>
+
+                    <div className="flex gap-1">
+                      {Array.from({ length: Math.min(5, pages) }, (_, i) => {
+                        let pageNum;
+                        if (pages <= 5) {
+                          pageNum = i + 1;
+                        } else if (page <= 3) {
+                          pageNum = i + 1;
+                        } else if (page >= pages - 2) {
+                          pageNum = pages - 4 + i;
+                        } else {
+                          pageNum = page - 2 + i;
+                        }
+
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => setPage(pageNum)}
+                            className={`w-10 h-10 rounded-lg text-sm ${
+                              page === pageNum
+                                ? "bg-purple-600 text-white"
+                                : "text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+
+                      {pages > 5 && page < pages - 2 && (
+                        <>
+                          <span className="px-2 flex items-center">...</span>
+                          <button
+                            onClick={() => setPage(pages)}
+                            className="w-10 h-10 rounded-lg text-sm text-gray-600 hover:bg-gray-200"
+                          >
+                            {pages}
+                          </button>
+                        </>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => page < pages && setPage(page + 1)}
+                      disabled={page === pages}
+                      className={`p-2 rounded-lg ${
+                        page === pages
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      <FaChevronRight />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </div>
   );

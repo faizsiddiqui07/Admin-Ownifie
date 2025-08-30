@@ -20,6 +20,7 @@ const AllBlogs = () => {
     try {
       setIsLoading(true);
       const { data } = await axios.get(`${base_url}/api/allBlog`);
+      
       if (data.success) {
         setBlogs(data.data);
         setFilteredBlogs(data.data);
@@ -119,7 +120,7 @@ const AllBlogs = () => {
     <div className="py-2 sm:py-4 md:py-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">Blog Management</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Blog Management</h2>
           <p className="text-gray-500 mt-2">Manage all your blog posts in one place</p>
         </div>
         <button
