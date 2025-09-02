@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { LuUserCheck } from "react-icons/lu";
 import {
   FaEdit,
   FaEye,
@@ -60,6 +61,7 @@ const AdminIndex = () => {
     activeBlogs: 0,
     inactiveBlogs: 0,
   });
+  const [activeUsers, setActiveUsers] = useState(0);
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
@@ -129,9 +131,19 @@ const AdminIndex = () => {
     }
   }, []);
 
-  useEffect(() => {
+const fetchActiveUsers = useCallback(async () => {
+  try {
+    const { data } = await axios.get(`${base_url}/active-users`);
+    setActiveUsers(data.activeUsers);
+  } catch (error) {
+    console.error("Failed to fetch active users:", error);
+  }
+}, []);
+
+useEffect(() => {
     fetchData();
-  }, [fetchData]);
+    fetchActiveUsers()
+  }, [fetchData,fetchActiveUsers]);
 
   // Debounced search
   const debouncedSearch = useMemo(
@@ -492,9 +504,9 @@ const AdminIndex = () => {
           onClick={() => setActiveTab("projects")}
         />
         <SummaryCard
-          title="Farm Houses"
-          count={stats.farmHouseCount}
-          icon={<FaHome />}
+          title="Active User"
+          count={activeUsers}
+          icon={<LuUserCheck />}
           bg="bg-gradient-to-r from-green-500 to-green-600"
         />
         <SummaryCard
