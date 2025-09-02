@@ -286,31 +286,61 @@ const AddProject = () => {
           </p>
         </div>
 
+        <div className="block xl:hidden">
+          <div className="flex gap-2 md:gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                const currentIndex = tabs.findIndex(
+                  (tab) => tab.id === activeTab
+                );
+                if (currentIndex > 0) setActiveTab(tabs[currentIndex - 1].id);
+              }}
+              disabled={activeTab === "basic"}
+              className="px-4 py-2 md:px-5 md:py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const currentIndex = tabs.findIndex(
+                  (tab) => tab.id === activeTab
+                );
+                if (currentIndex < tabs.length - 1)
+                  setActiveTab(tabs[currentIndex + 1].id);
+              }}
+              disabled={activeTab === "description"}
+              className="px-4 py-2 md:px-5 md:py-2.5 bg-gray-800 text-white rounded-lg hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
         {/* Shadcn Tabs Implementation */}
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
           className="w-full mb-6 md:mb-8"
         >
-          <div className="bg-white rounded-xl shadow-sm p-1 w-[100%]">
-            <div className="w-full">
-              <TabsList className="w-full overflow-x-auto custom-scrollbar">
-                <div className="flex min-w-max space-x-4 sm:space-x-6 snap-x snap-mandatory">
-                  {tabs.map((tab) => (
-                    <TabsTrigger
-                      key={tab.id}
-                      value={tab.id}
-                      className="px-3 py-2 overflow-x-auto text-xs sm:text-sm font-medium rounded-lg transition-colors 
+          <div className="bg-white rounded-xl shadow-sm p-1 w-[100%] hidden xl:block">
+            <TabsList className="w-full">
+              <div className="w-full flex min-w-max space-x-4 sm:space-x-6 snap-x snap-mandatory">
+                {tabs.map((tab) => (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className="px-3 py-2 overflow-x-auto text-xs sm:text-sm font-medium rounded-lg transition-colors 
                         data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 
                         data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 
                         data-[state=inactive]:hover:bg-gray-100 whitespace-nowrap"
-                    >
-                      {tab.label}
-                    </TabsTrigger>
-                  ))}
-                </div>
-              </TabsList>
-            </div>
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
+              </div>
+            </TabsList>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
@@ -681,10 +711,6 @@ const AddProject = () => {
                     <p className="text-sm text-gray-600 mt-1">
                       Calculate the costs for farm house development
                     </p>
-                  </div>
-                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs sm:text-sm flex items-center self-start sm:self-auto">
-                    <FaCalculator className="mr-1" />
-                    <span>Auto-calculating</span>
                   </div>
                 </div>
                 <div className="p-4 md:p-6">
