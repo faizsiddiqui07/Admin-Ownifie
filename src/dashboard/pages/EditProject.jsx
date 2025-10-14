@@ -243,12 +243,11 @@ const EditProject = () => {
         ...data,
         farmHouseDetails: farmHouse,
       };
-      const res = await axios.put(
-        `${base_url}/api/update/${project_id}`,
+      const res = await axios.put(`${base_url}/api/update/${project_id}`,
         payload,
-        {
-          withCredentials: true,
-        }
+        // {
+        //   withCredentials: true,
+        // }
       );
       if (res.data.success) {
         toast.success("Project updated");
