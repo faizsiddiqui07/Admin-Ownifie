@@ -287,7 +287,6 @@ const AddProject = () => {
       height: 300,
       readonly: false,
       toolbarAdaptive: false,
-      buttons: "bold,italic,underline,ul,ol,align,link,source",
       style: {
         font: "14px sans-serif",
       },
