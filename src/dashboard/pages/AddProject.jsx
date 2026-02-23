@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
-import { MdClose, MdDelete, MdAdd, MdInfoOutline } from "react-icons/md";
-import { FaCloudUploadAlt, FaCalculator } from "react-icons/fa";
+import React, { useRef, useState, useEffect, useMemo } from "react";
+import { MdClose, MdDelete } from "react-icons/md";
+import { FaCloudUploadAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import JoditEditor from "jodit-react";
 import toast from "react-hot-toast";
@@ -8,7 +8,6 @@ import axios from "axios";
 import uploadImage from "../helpers/uploadImage";
 import DisplayImage from "../components/DisplayImage";
 import { base_url } from "../../config/config";
-import { useEffect } from "react";
 
 // Import Shadcn components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +17,10 @@ const AddProject = () => {
   const editor = useRef(null);
   const amenityRef = useRef();
   const tabsRef = useRef(null);
+
+  // Naya Ref Description ke liye taaki Jodit crash na ho
+  const descriptionRef = useRef("");
+
   const [activeTab, setActiveTab] = useState("basic");
   const [showAmenitySuggestions, setShowAmenitySuggestions] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState();
@@ -91,7 +94,7 @@ const AddProject = () => {
     const idcTotal = calc(farmHouse.idc.squareFeet, farmHouse.idc.rate);
     const amenityTotal = calc(
       farmHouse.servicesAndAmenities.squareFeet,
-      farmHouse.servicesAndAmenities.rate
+      farmHouse.servicesAndAmenities.rate,
     );
 
     let modulePrice = 0;
@@ -185,7 +188,6 @@ const AddProject = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
     const validTypes = [
       "image/jpeg",
       "image/jpg",
@@ -197,7 +199,6 @@ const AddProject = () => {
       return toast.error("Please select a valid image (JPEG, PNG, WEBP, GIF)");
     }
 
-    // Validate file size (5MB max)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       return toast.error("Image size must be less than 5MB");
@@ -238,10 +239,17 @@ const AddProject = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await axios.post(`${base_url}/api/project/add_project`, {
+      // Yahan description Ref se le rahe hain
+      const payload = {
         ...data,
+        description: descriptionRef.current,
         farmHouseDetails: farmHouse,
-      });
+      };
+
+      const response = await axios.post(
+        `${base_url}/api/project/add_project`,
+        payload,
+      );
 
       if (response.data.success) {
         toast.success(response.data.message);
@@ -274,6 +282,19 @@ const AddProject = () => {
     { id: "description", label: "Description" },
   ];
 
+  const joditConfig = useMemo(
+    () => ({
+      height: 300,
+      readonly: false,
+      toolbarAdaptive: false,
+      buttons: "bold,italic,underline,ul,ol,align,link,source",
+      style: {
+        font: "14px sans-serif",
+      },
+    }),
+    [],
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 py-4 px-3 sm:px-4 md:px-6 lg:px-8">
       <div className="w-full">
@@ -292,7 +313,7 @@ const AddProject = () => {
               type="button"
               onClick={() => {
                 const currentIndex = tabs.findIndex(
-                  (tab) => tab.id === activeTab
+                  (tab) => tab.id === activeTab,
                 );
                 if (currentIndex > 0) setActiveTab(tabs[currentIndex - 1].id);
               }}
@@ -305,7 +326,7 @@ const AddProject = () => {
               type="button"
               onClick={() => {
                 const currentIndex = tabs.findIndex(
-                  (tab) => tab.id === activeTab
+                  (tab) => tab.id === activeTab,
                 );
                 if (currentIndex < tabs.length - 1)
                   setActiveTab(tabs[currentIndex + 1].id);
@@ -318,7 +339,6 @@ const AddProject = () => {
           </div>
         </div>
 
-        {/* Shadcn Tabs Implementation */}
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
@@ -343,17 +363,13 @@ const AddProject = () => {
             </TabsList>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-            {/* Basic Info Tab */}
+          <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8 mt-6">
             <TabsContent value="basic">
               <div className="bg-white rounded-xl md:rounded-2xl shadow-md overflow-hidden">
                 <div className="px-4 py-4 md:px-6 md:py-5 border-b border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-800">
                     Basic Information
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Provide the fundamental details about your project
-                  </p>
                 </div>
                 <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {[
@@ -410,7 +426,7 @@ const AddProject = () => {
                           required={required}
                         />
                       </div>
-                    )
+                    ),
                   )}
 
                   <div className="flex flex-col">
@@ -484,6 +500,9 @@ const AddProject = () => {
                       </option>
                       <option value="Farm Lands">Farm Lands</option>
                       <option value="Farm Houses">Farm Houses</option>
+                      <option value="Private Nature Residence">
+                        Private Nature Residence
+                      </option>
                     </select>
                   </div>
 
@@ -538,7 +557,7 @@ const AddProject = () => {
                             .filter((item) =>
                               item
                                 .toLowerCase()
-                                .includes(amenityInput.toLowerCase())
+                                .includes(amenityInput.toLowerCase()),
                             )
                             .map((amenity) => (
                               <div
@@ -591,23 +610,18 @@ const AddProject = () => {
               </div>
             </TabsContent>
 
-            {/* Ownership Plan Tab */}
             <TabsContent value="ownership">
               <div className="bg-white rounded-xl md:rounded-2xl shadow-md overflow-hidden">
                 <div className="px-4 py-4 md:px-6 md:py-5 border-b border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-800">
                     Ownership Plan
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Define the installment plan for property ownership
-                  </p>
                 </div>
                 <div className="p-4 md:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {Object.keys(data.ownershipPlan).map((key, index) => {
                     const placeholder = key
                       .replace(/([A-Z])/g, " $1")
                       .replace(/^./, (str) => str.toUpperCase());
-
                     return (
                       <div key={key} className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700 mb-1">
@@ -644,7 +658,6 @@ const AddProject = () => {
               </div>
             </TabsContent>
 
-            {/* Unit Breakdown Tab */}
             <TabsContent value="units">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {["wholeUnit", "singleUnit"].map((unitKey) => (
@@ -662,7 +675,6 @@ const AddProject = () => {
                         const placeholder = field
                           .replace(/([A-Z])/g, " $1")
                           .replace(/^./, (str) => str.toUpperCase());
-
                         return (
                           <div key={field} className="flex flex-col">
                             <label className="text-sm font-medium text-gray-700 mb-1">
@@ -700,7 +712,6 @@ const AddProject = () => {
               </div>
             </TabsContent>
 
-            {/* Farm House Costing Tab */}
             <TabsContent value="farmhouse">
               <div className="bg-white rounded-xl md:rounded-2xl shadow-md overflow-hidden">
                 <div className="px-4 py-4 md:px-6 md:py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -708,9 +719,6 @@ const AddProject = () => {
                     <h3 className="text-lg font-semibold text-gray-800">
                       Farm House Costing
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Calculate the costs for farm house development
-                    </p>
                   </div>
                 </div>
                 <div className="p-4 md:p-6">
@@ -821,16 +829,12 @@ const AddProject = () => {
               </div>
             </TabsContent>
 
-            {/* Project Images Tab */}
             <TabsContent value="images">
               <div className="bg-white rounded-xl md:rounded-2xl shadow-md overflow-hidden">
                 <div className="px-4 py-4 md:px-6 md:py-5 border-b border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-800">
                     Project Images
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Upload images to showcase your project
-                  </p>
                 </div>
                 <div className="p-4 md:p-6">
                   <label className="flex flex-col items-center justify-center w-full h-32 md:h-40 border-2 border-dashed border-gray-300 rounded-lg md:rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
@@ -896,47 +900,34 @@ const AddProject = () => {
               </div>
             </TabsContent>
 
-            {/* Description Tab */}
             <TabsContent value="description">
               <div className="bg-white rounded-xl md:rounded-2xl shadow-md overflow-hidden">
                 <div className="px-4 py-4 md:px-6 md:py-5 border-b border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-800">
                     Project Description
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Provide a detailed description of your project
-                  </p>
                 </div>
                 <div className="p-4 md:p-6">
                   <JoditEditor
                     ref={editor}
                     value={data.description}
-                    config={{
-                      height: 300,
-                      readonly: false,
-                      toolbarAdaptive: false,
-                      buttons: "bold,italic,underline,ul,ol,align,link,source",
-                      style: {
-                        font: "14px sans-serif",
-                      },
+                    config={joditConfig}
+                    onChange={(newContent) => {
+                      // Yahan state ki jagah ref me save kar rahe hain taaki re-render na ho
+                      descriptionRef.current = newContent;
                     }}
-                    onBlur={(content) =>
-                      setData((prev) => ({ ...prev, description: content }))
-                    }
-                    onChange={() => {}}
                   />
                 </div>
               </div>
             </TabsContent>
 
-            {/* Navigation and Submit */}
             <div className="flex flex-col sm:flex-row justify-between gap-3 bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-md">
               <div className="flex gap-2 md:gap-3">
                 <button
                   type="button"
                   onClick={() => {
                     const currentIndex = tabs.findIndex(
-                      (tab) => tab.id === activeTab
+                      (tab) => tab.id === activeTab,
                     );
                     if (currentIndex > 0)
                       setActiveTab(tabs[currentIndex - 1].id);
@@ -950,7 +941,7 @@ const AddProject = () => {
                   type="button"
                   onClick={() => {
                     const currentIndex = tabs.findIndex(
-                      (tab) => tab.id === activeTab
+                      (tab) => tab.id === activeTab,
                     );
                     if (currentIndex < tabs.length - 1)
                       setActiveTab(tabs[currentIndex + 1].id);
@@ -998,7 +989,6 @@ const AddProject = () => {
           </form>
         </Tabs>
 
-        {/* Fullscreen Image View */}
         {openFullScreenImage && (
           <DisplayImage
             imgUrl={fullScreenImage}
